@@ -105,7 +105,7 @@ function PlayerCharacter:fire(current_time)
 end
 
 function PlayerCharacter:drop_torch()
-  if game.num_torches < max_torches then
+  if game.num_torches < game.settings.max_torches then
     local pos = {x = self.pos.x, y = self.pos.y}
     local torch = Torch:new(pos, 60)
     game.torches[torch.id] = torch

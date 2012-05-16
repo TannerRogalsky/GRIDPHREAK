@@ -6,6 +6,8 @@ function Game:initialize()
   local Camera = require 'lib/camera'
   camera = Camera:new()
 
+  self.settings = {}
+
   self:gotoState("Loading")
 end
 

@@ -11,10 +11,10 @@ function Menu:enteredState()
     g.print("Easy Mode", x + 10, y + 10)
   end
   box.onclick = function()
-    spawn_rate = 4
-    max_torches = 8
-    crawler_ratio = 8
-    difficulty = "easy"
+    self.settings.spawn_rate = 4
+    self.settings.max_torches = 8
+    self.settings.crawler_ratio = 8
+    self.settings.difficulty = "easy"
   end
   table.insert(self.ui, box)
 
@@ -26,10 +26,10 @@ function Menu:enteredState()
     g.print("Hard Mode", x + 10, y + 10)
   end
   box.onclick = function()
-    spawn_rate = 2
-    max_torches = 5
-    crawler_ratio = 7
-    difficulty = "hard"
+    self.settings.spawn_rate = 2
+    self.settings.max_torches = 5
+    self.settings.crawler_ratio = 7
+    self.settings.difficulty = "hard"
   end
   table.insert(self.ui, box)
 
@@ -41,10 +41,10 @@ function Menu:enteredState()
     g.print("Insane Mode", x + 10, y + 10)
   end
   box.onclick = function()
-    spawn_rate = 0.8
-    max_torches = 4
-    crawler_ratio = 5
-    difficulty = "insane"
+    self.settings.spawn_rate = 0.8
+    self.settings.max_torches = 4
+    self.settings.crawler_ratio = 5
+    self.settings.difficulty = "insane"
   end
   table.insert(self.ui, box)
 

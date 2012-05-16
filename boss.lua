@@ -26,7 +26,7 @@ function Boss:initialize(pos, radius)
   gun_2.orientation = -90
   gun_2.time_of_last_fire = 0
 
-  if difficulty == "insane" then
+  if self.settings.difficulty == "insane" then
     local gun_3 = Gun:new("main", 0.5, 0)
     self.guns[gun_3.id] = gun_3
     gun_3.orientation = 0

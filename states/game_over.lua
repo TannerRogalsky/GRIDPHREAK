@@ -26,9 +26,9 @@ function GameOver:enteredState()
       score = 0
     }
   end
-  if stats.score > scores[difficulty].score then
-    scores[difficulty].score = stats.score
-    scores[difficulty].time = math.round(stats.round_time, 1)
+  if stats.score > scores[self.settings.difficulty].score then
+    scores[self.settings.difficulty].score = stats.score
+    scores[self.settings.difficulty].time = math.round(stats.round_time, 1)
     self.new_highscore = true
   else
     self.new_highscore = false

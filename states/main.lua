@@ -2,11 +2,8 @@ local Main = Game:addState('Main')
 
 function Main:enteredState()
   local MAX_BALLS = 50
-  overlay = true
-  god_mode = false
-  spawn_rate = spawn_rate or 3
-  max_torches = max_torches or 5
-  crawler_ratio = crawler_ratio or 8
+  self.settings.overlay_enabled = true
+  self.settings.god_mode_enabled = false
   screenshots_enabled = false
 
   self.collider = HC(50, self.on_start_collide, self.on_stop_collide)
@@ -27,7 +24,7 @@ function Main:enteredState()
   screenshots = {}
 
   local boss_spawn_rate
-  if difficulty == "insane" then
+  if self.settings.difficulty == "insane" then
     boss_spawn_rate = 10
   else
     boss_spawn_rate = 60
@@ -82,7 +79,7 @@ function Main:render()
     bullet:render()
   end
 
-  if overlay then
+  if self.settings.overlay_enabled then
     love.graphics.setColor(255,255,255,255)
     love.graphics.setPixelEffect(self.overlay)
     love.graphics.rectangle('fill', 0,0,love.graphics.getWidth(), love.graphics.getHeight())
@@ -113,7 +110,7 @@ function Main:render()
   g.setColor(0,0,0)
   g.print("Score: " .. self.player.score, 2, 4)
   g.print("Time: " .. math.round(self.round_time, 1), 250, 4)
-  g.print("Torches available: " .. max_torches - self.num_torches, 400, 4)
+  g.print("Torches available: " .. self.settings.max_torches - self.num_torches, 400, 4)
 end
 
 function Main:update(dt)
@@ -189,12 +186,12 @@ function Main.mousereleased(x, y, button)
 end
 
 function Main:spawn_baddy(current_time)
-  if current_time - self.time_since_last_spawn > spawn_rate then
+  if current_time - self.time_since_last_spawn > self.settings.spawn_rate then
 
     local x,y = self:get_enemy_spawn_position()
 
     local enemy_type
-    if math.random(1,10) >= crawler_ratio then
+    if math.random(1,10) >= self.settings.crawler_ratio then
       enemy_type = Shooter
     else
       enemy_type = Enemy
@@ -214,7 +211,7 @@ function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
     return
   end
 
-  if god_mode ~= true then
+  if self.settings.god_mode_enabled ~= true then
     if shape_one.parent == game.player and shape_two.bound ~= true or shape_two.parent == game.player and shape_one.bound ~= true then
       game.over = true
       return
