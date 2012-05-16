@@ -8,6 +8,19 @@ function Game:initialize()
 
   self.settings = {}
 
+  self.highscores = {}
+  local json = require('json')
+  if love.filesystem.isFile("scores.txt") then
+    local raw = love.filesystem.read("scores.txt")
+    self.highscores = json.decode(raw)
+  else
+    --  setup empty highscores because scores file doesn't exist
+    local difficulties = {"easy", "hard", "insane"}
+    for _,difficulty in ipairs(difficulties) do
+      self.highscores[difficulty] = {time = 0, score = 0}
+    end
+  end
+
   self:gotoState("Loading")
 end
 

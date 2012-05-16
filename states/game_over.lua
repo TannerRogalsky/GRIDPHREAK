@@ -5,36 +5,16 @@ function GameOver:enteredState()
     screen:encode("screen" .. i .. ".png")
   end
 
-  local scores = {}
-  local json = require('json')
-  if love.filesystem.isFile("scores.txt") then
-    local raw = love.filesystem.read("scores.txt")
-    scores = json.decode(raw)
-  else
-    scores["easy"] = {
-      time = 0,
-      score = 0
-    }
-
-    scores["hard"] = {
-      time = 0,
-      score = 0
-    }
-
-    scores["insane"] = {
-      time = 0,
-      score = 0
-    }
-  end
-  if stats.score > scores[self.settings.difficulty].score then
-    scores[self.settings.difficulty].score = stats.score
-    scores[self.settings.difficulty].time = math.round(stats.round_time, 1)
+  if stats.score > self.highscores[self.settings.difficulty].score then
+    self.highscores[self.settings.difficulty].score = stats.score
+    self.highscores[self.settings.difficulty].time = math.round(stats.round_time, 1)
     self.new_highscore = true
   else
     self.new_highscore = false
   end
 
-  love.filesystem.write("scores.txt", json.encode(scores))
+  local json = require('json')
+  love.filesystem.write("scores.txt", json.encode(self.highscores))
 
 end
 

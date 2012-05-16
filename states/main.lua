@@ -211,7 +211,7 @@ function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
     return
   end
 
-  if self.settings.god_mode_enabled ~= true then
+  if game.settings.god_mode_enabled ~= true then
     if shape_one.parent == game.player and shape_two.bound ~= true or shape_two.parent == game.player and shape_one.bound ~= true then
       game.over = true
       return
