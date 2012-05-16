@@ -35,3 +35,11 @@ end
 function love.draw()
   game:render()
 end
+
+function love.focus(has_focus)
+  game:focus(has_focus)
+end
+
+function love.quit()
+  game:quit()
+end

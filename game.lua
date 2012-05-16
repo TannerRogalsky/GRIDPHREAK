@@ -49,3 +49,9 @@ end
 function Game.joystickreleased(joystick, button)
   print(joystick, button)
 end
+
+function Game:focus(has_focus)
+end
+
+function Game:quit()
+end

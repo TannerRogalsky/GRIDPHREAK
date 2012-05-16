@@ -19,6 +19,7 @@ function Main:enteredState()
 
   self.time_since_last_spawn = 0
   self.over = false
+  self.paused = false
   self.round_time = 0
 
   screenshots = {}
@@ -98,9 +99,14 @@ function Main:render()
   g.rectangle("fill", 0, 0, g.getWidth(), 70)
   g.setPixelEffect()
 
-  if game.over then
+  if self.over then
     g.setColor(0,0,0,255)
     local text = "You done went and got yourself killed. Click to continue."
+    local offset = self.ui_font:getWidth(text)
+    g.print(text, g.getWidth() - offset - 10, 4)
+  elseif self.paused then
+    g.setColor(0,0,0,255)
+    local text = "Paused. Click to continue..."
     local offset = self.ui_font:getWidth(text)
     g.print(text, g.getWidth() - offset - 10, 4)
   end
@@ -114,7 +120,7 @@ function Main:render()
 end
 
 function Main:update(dt)
-  if game.over == true then
+  if self.over or self.paused then
     return
   end
 
@@ -173,6 +179,8 @@ function Main.mousepressed(x, y, button)
   if button == "l" then
     if game.over then
       game:gotoState("GameOver")
+    elseif game.paused then
+      game.paused = false
     else
       game.player.firing = true
     end
@@ -183,6 +191,16 @@ function Main.mousereleased(x, y, button)
   if button == "l" then
     game.player.firing = false
   end
+end
+
+function Game:focus(has_focus)
+  if has_focus == false then
+    game.paused = true
+  end
+end
+
+function Game:quit()
+  print("quiting")
 end
 
 function Main:spawn_baddy(current_time)
