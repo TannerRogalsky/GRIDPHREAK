@@ -9,6 +9,7 @@ function Menu:enteredState()
     self:draw("line")
     local x,y = self:bbox()
     g.print("Easy Mode", x + 10, y + 10)
+    g.print("Highscore: " .. game.highscores.easy.score, x + 10, y + 35)
   end
   box.onclick = function()
     self.settings.spawn_rate = 4
@@ -24,6 +25,7 @@ function Menu:enteredState()
     self:draw("line")
     local x,y = self:bbox()
     g.print("Hard Mode", x + 10, y + 10)
+    g.print("Highscore: " .. game.highscores.hard.score, x + 10, y + 35)
   end
   box.onclick = function()
     self.settings.spawn_rate = 2
@@ -39,6 +41,7 @@ function Menu:enteredState()
     self:draw("line")
     local x,y = self:bbox()
     g.print("Insane Mode", x + 10, y + 10)
+    g.print("Highscore: " .. game.highscores.insane.score, x + 10, y + 35)
   end
   box.onclick = function()
     self.settings.spawn_rate = 0.8
