@@ -193,13 +193,13 @@ function Main.mousereleased(x, y, button)
   end
 end
 
-function Game:focus(has_focus)
+function Main:focus(has_focus)
   if has_focus == false then
     game.paused = true
   end
 end
 
-function Game:quit()
+function Main:quit()
   print("quiting")
 end
 
