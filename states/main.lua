@@ -35,8 +35,10 @@ function Main:enteredState()
     self.enemies[enemy.id] = enemy
   end)
 
+  cron.every(self.settings.spawn_rate, self.spawn_baddy, self)
+
   if screenshots_enabled then
-    cron.every(1, take_screenshot)
+    cron.every(1, self.take_screenshot)
   end
 
   local raw = love.filesystem.read("shaders/overlay.c"):format(MAX_BALLS)
@@ -49,7 +51,7 @@ function Main:enteredState()
   self:update_overlay()
 end
 
-function take_screenshot()
+function Main.take_screenshot()
   table.insert(screenshots, g.newScreenshot())
 end
 
@@ -141,9 +143,6 @@ function Main:update(dt)
     torch:update(dt)
   end
 
-  local t = love.timer.getMicroTime()
-  self:spawn_baddy(t)
-
   self:update_overlay()
 end
 
@@ -202,23 +201,18 @@ function Main:update_overlay()
   self.overlay:send('delta_to_target', unpack(deltas))
 end
 
-function Main:spawn_baddy(current_time)
-  if current_time - self.time_since_last_spawn > self.settings.spawn_rate then
+function Main:spawn_baddy()
+  local x,y = self.get_enemy_spawn_position()
 
-    local x,y = self:get_enemy_spawn_position()
-
-    local enemy_type
-    if math.random(1,10) >= self.settings.crawler_ratio then
-      enemy_type = Shooter
-    else
-      enemy_type = Enemy
-    end
-
-    local enemy = enemy_type:new({x = x, y = y})
-    self.enemies[enemy.id] = enemy
-
-    self.time_since_last_spawn = current_time
+  local enemy_type
+  if math.random(1,10) >= self.settings.crawler_ratio then
+    enemy_type = Shooter
+  else
+    enemy_type = Enemy
   end
+
+  local enemy = enemy_type:new({x = x, y = y})
+  self.enemies[enemy.id] = enemy
 end
 
 function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
