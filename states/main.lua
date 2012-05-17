@@ -10,7 +10,6 @@ function Main:enteredState()
 
   self.player = PlayerCharacter:new({pos = {x = g.getWidth() / 2, y = g.getHeight() / 2}})
   self.enemies = {}
-  self.num_shooters = 0
   self.bullets = {}
   self.torches = {}
   self.num_torches = 0
@@ -44,15 +43,10 @@ function Main:enteredState()
   self.overlay = love.graphics.newPixelEffect(raw)
   self.bg = love.graphics.newImage("images/bg2.png")
 
-  local positions, radii, deltas = self:pack_game_objects()
-  self.overlay:send('num_balls', self.num_torches + self.num_shooters)
-  self.overlay:send('num_flashlights', self.num_shooters)
-  self.overlay:send('balls', unpack(positions))
-  self.overlay:send('radii', unpack(radii))
-  self.overlay:send('delta_to_target', unpack(deltas))
-
   raw = love.filesystem.read("shaders/topbar.c"):format(g.getHeight(), g.getWidth(), 30, 200)
   self.topbar = g.newPixelEffect(raw)
+
+  self:update_overlay()
 end
 
 function take_screenshot()
@@ -150,13 +144,7 @@ function Main:update(dt)
   local t = love.timer.getMicroTime()
   self:spawn_baddy(t)
 
-  local positions, radii, deltas = self:pack_game_objects()
-  -- print(self.num_torches + self.num_shooters, self.num_shooters)
-  self.overlay:send('num_balls', self.num_torches + self.num_shooters)
-  self.overlay:send('num_flashlights', self.num_shooters)
-  self.overlay:send('balls', unpack(positions))
-  self.overlay:send('radii', unpack(radii))
-  self.overlay:send('delta_to_target', unpack(deltas))
+  self:update_overlay()
 end
 
 function Main.keypressed(key, unicode)
@@ -201,6 +189,17 @@ end
 
 function Main:quit()
   print("quiting")
+end
+
+function Main:update_overlay()
+  local positions, radii, deltas = self:pack_game_objects()
+  local num_enemies = self:get_num_enemies()
+  -- the +1's here are to take into accoun the player
+  self.overlay:send('num_balls', self.num_torches + num_enemies.bosses + num_enemies.shooters + 1)
+  self.overlay:send('num_flashlights', num_enemies.shooters + 1)
+  self.overlay:send('balls', unpack(positions))
+  self.overlay:send('radii', unpack(radii))
+  self.overlay:send('delta_to_target', unpack(deltas))
 end
 
 function Main:spawn_baddy(current_time)
@@ -375,13 +374,11 @@ function Main:pack_game_objects()
   table.insert(positions, {self.player.pos.x, love.graphics.getHeight() - self.player.pos.y})
   table.insert(radii, self.player.radius)
   table.insert(deltas, self.player.delta_to_mouse)
-  self.num_shooters = 1
   for id,enemy in pairs(self.enemies) do
     if instanceOf(Shooter, enemy) then
       table.insert(positions, {enemy.pos.x, love.graphics.getHeight() - enemy.pos.y})
       table.insert(radii, enemy.radius)
       table.insert(deltas, enemy.delta_to_player)
-      self.num_shooters = self.num_shooters + 1
     elseif instanceOf(Boss, enemy) then
       table.insert(bosses, enemy)
     end
@@ -393,7 +390,6 @@ function Main:pack_game_objects()
     table.insert(positions, {boss.pos.x, love.graphics.getHeight() - boss.pos.y})
     table.insert(radii, boss.radius + 10)
     table.insert(deltas, boss.delta_to_player)
-    self.num_torches = self.num_torches + 1
   end
 
   for id,torch in pairs(self.torches) do
@@ -422,6 +418,21 @@ function Main.get_enemy_spawn_position()
     end
   end
   return x, y
+end
+
+function Main:get_num_enemies()
+  local results = {all = 0, shooters = 0, bosses = 0, crawlers = 0}
+  for index,enemy in pairs(self.enemies) do
+    results.all = results.all + 1
+    if instanceOf(Shooter, enemy) then
+      results.shooters = results.shooters + 1
+    elseif instanceOf(Boss, enemy) then
+      results.bosses = results.bosses + 1
+    else
+      results.crawlers = results.crawlers + 1
+    end
+  end
+  return results
 end
 
 return Main
