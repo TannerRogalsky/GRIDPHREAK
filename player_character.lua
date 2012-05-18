@@ -31,7 +31,10 @@ function PlayerCharacter:initialize(jsonInTableForm)
       on_release = {
       },
       on_update = function()
-        self:move(love.joystick.getAxis(0, 0) * 10, love.joystick.getAxis(0,1) * 10)
+        self:move(love.joystick.getAxis(1, 1) * self.speed * 2.5, love.joystick.getAxis(1, 2) * self.speed * 2.5)
+
+        local x, y = love.joystick.getAxis(1, 3) + self.pos.x, love.joystick.getAxis(1, 4) + self.pos.y
+        self.angle = math.atan2(y - self.pos.y, x - self.pos.x)
       end
     }
   }
@@ -44,7 +47,7 @@ function PlayerCharacter:initialize(jsonInTableForm)
   self.image = g.newImage("images/player_v2.png")
 
   self.angle = 0
-  self.firing = false
+  self.firing = true
   self.time_of_last_fire = 0
   self.gun = Gun:new("machine_gun", 0.1, 10)
   -- self.gun = Gun:new("sniper", 1, 0)
@@ -64,8 +67,8 @@ function PlayerCharacter:update(dt)
     self.control_map.joystick.on_update()
   end
 
-  local x, y = love.mouse.getX(), love.mouse.getY()
-  self.angle = math.atan2(y - self.pos.y, x - self.pos.x)
+  -- local x, y = love.mouse.getX(), love.mouse.getY()
+  -- self.angle = math.atan2(y - self.pos.y, x - self.pos.x)
 
   -- end handle input
 
@@ -74,9 +77,9 @@ function PlayerCharacter:update(dt)
     self:fire(t)
   end
 
-  local dx = love.mouse.getX() - self.pos.x
-  local dy = self.pos.y - love.mouse.getY()
-  self.delta_to_mouse = {dx, dy}
+  -- local dx = love.mouse.getX() - self.pos.x
+  -- local dy = self.pos.y - love.mouse.getY()
+  self.delta_to_mouse = {love.joystick.getAxis(2, 3), -love.joystick.getAxis(2, 4)}
 end
 
 function PlayerCharacter:render()

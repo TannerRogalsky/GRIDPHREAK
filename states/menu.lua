@@ -103,6 +103,11 @@ function Menu.mousepressed(x, y, button)
   end
 end
 
+function Menu.joystickpressed(joystick, button)
+  game.ui[button].onclick()
+  game:gotoState("Main")
+end
+
 function Menu:exitedState()
   self.collider:clear()
   self.collider = nil

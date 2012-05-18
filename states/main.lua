@@ -176,8 +176,26 @@ end
 
 function Main.mousereleased(x, y, button)
   if button == "l" then
-    game.player.firing = false
+    game.player.firing = true
   end
+end
+
+function Main.joystickpressed(joystick, button)
+  -- print(joystick, button)
+  -- print(type(joystick), type(button))
+  if button == 2 then
+    if game.over then
+      game:gotoState("GameOver")
+    elseif game.paused then
+      game.paused = false
+    end
+  elseif button == 6 then
+    game.player:drop_torch()
+  end
+end
+
+function Main.joystickreleased(joystick, button)
+  print(joystick, button)
 end
 
 function Main:focus(has_focus)

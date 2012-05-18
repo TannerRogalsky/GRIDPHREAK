@@ -40,4 +40,8 @@ function GameOver.mousepressed(x, y, button)
   game:gotoState("Menu")
 end
 
+function GameOver.joystickpressed(joystick, button)
+  game:gotoState("Menu")
+end
+
 return GameOver
