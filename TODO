@@ -1,7 +1,6 @@
 BUGS
 - collision function is horrible and probably barely working. Use on_collide function on objects?
 - a bunch of the love event callbacks are using static game.methods which probably wrong
-- make generic enemies into "Crawlers" class and make Enemy abstract
 
 FEATURES
 - show the torches or something?

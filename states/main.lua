@@ -208,7 +208,7 @@ function Main:spawn_baddy()
   if math.random(1,10) >= self.settings.crawler_ratio then
     enemy_type = Shooter
   else
-    enemy_type = Enemy
+    enemy_type = Crawler
   end
 
   local enemy = enemy_type:new({x = x, y = y})
@@ -218,7 +218,7 @@ end
 function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
   -- print(tostring(shape_one.parent) .. " is colliding with " .. tostring(shape_two.parent))
 
-  if shape_one.bound and instanceOf(Enemy, shape_two.parent) or shape_two.bound and instanceOf(Enemy, shape_one.parent) or game.over then
+  if shape_one.bound and instanceOf(Crawler, shape_two.parent) or shape_two.bound and instanceOf(Crawler, shape_one.parent) or game.over then
     return
   end
 
@@ -229,7 +229,7 @@ function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
     end
   end
   
-  if instanceOf(Bullet, shape_one.parent) and instanceOf(Enemy, shape_two.parent) then
+  if instanceOf(Bullet, shape_one.parent) and instanceOf(Crawler, shape_two.parent) then
     -- collision resolution
     if instanceOf(Boss, shape_two.parent) then
       shape_two.parent.health = shape_two.parent.health - 1

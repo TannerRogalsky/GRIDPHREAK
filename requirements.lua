@@ -24,11 +24,13 @@ require 'base'
 require 'game'
 require 'character'
 require 'player_character'
-require 'enemy'
 require 'bullet'
-require 'shooter'
 require 'gun'
 require 'torch'
+
+require 'enemy'
+require 'crawler'
+require 'shooter'
 require 'boss'
 
 -- Game states
