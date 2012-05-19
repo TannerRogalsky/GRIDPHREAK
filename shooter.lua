@@ -5,6 +5,7 @@ function Shooter:initialize(pos, radius)
 
   self.speed = 1
   self.time_of_last_fire = 0
+  self.color = {255,255,0}
 
   self.delta_to_player = {0,0}
 end

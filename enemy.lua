@@ -11,6 +11,7 @@ function Enemy:initialize(pos, radius)
   self._physics_body.parent = self
   self.angle = 0
   self.speed = 2
+  self.color = {255,255,255,255}
 
   self.image = g.newImage("images/enemy_grey.png")
 end
