@@ -213,63 +213,72 @@ end
 
 function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
   -- print(tostring(shape_one.parent) .. " is colliding with " .. tostring(shape_two.parent))
+  local object_one, object_two = shape_one.parent, shape_two.parent
 
-  if shape_one.bound and instanceOf(Crawler, shape_two.parent) or shape_two.bound and instanceOf(Crawler, shape_one.parent) or game.over then
+  if type(object_one.on_collide) == "function" then
+    object_one:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  end
+
+  if type(object_two.on_collide) == "function" then
+    object_two:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  end
+
+  if object_one.bound and instanceOf(Enemy, object_two) or object_two.bound and instanceOf(Enemy, object_one) or game.over then
     return
   end
 
   if game.settings.god_mode_enabled ~= true then
-    if shape_one.parent == game.player and shape_two.bound ~= true or shape_two.parent == game.player and shape_one.bound ~= true then
+    if object_one == game.player and object_two.bound ~= true or object_two == game.player and object_one.bound ~= true then
       game.over = true
       return
     end
   end
   
-  if instanceOf(Bullet, shape_one.parent) and instanceOf(Crawler, shape_two.parent) then
+  if instanceOf(Bullet, object_one) and instanceOf(Crawler, object_two) then
     -- collision resolution
-    if instanceOf(Boss, shape_two.parent) then
-      shape_two.parent.health = shape_two.parent.health - 1
-      local dead = shape_two.parent.health <= 0
+    if instanceOf(Boss, object_two) then
+      object_two.health = object_two.health - 1
+      local dead = object_two.health <= 0
       if dead then
         game.collider:remove(shape_one, shape_two)
-        game.enemies[shape_two.parent.id] = nil
-        game.bullets[shape_one.parent.id] = nil
+        game.enemies[object_two.id] = nil
+        game.bullets[object_one.id] = nil
       else
         game.collider:remove(shape_one)
-        game.bullets[shape_one.parent.id] = nil
+        game.bullets[object_one.id] = nil
       end
     else
       game.collider:remove(shape_one, shape_two)
-      game.enemies[shape_two.parent.id] = nil
-      game.bullets[shape_one.parent.id] = nil
+      game.enemies[object_two.id] = nil
+      game.bullets[object_one.id] = nil
     end
     -- scoring calc
-    if instanceOf(Shooter, shape_two.parent) then
+    if instanceOf(Shooter, object_two) then
       game.player.score = game.player.score + 3
     else
       game.player.score = game.player.score + 1
     end
     return
-  elseif instanceOf(Bullet, shape_two.parent) and instanceOf(Enemy, shape_one.parent) then
+  elseif instanceOf(Bullet, object_two) and instanceOf(Enemy, object_one) then
     -- collision resolution
-    if instanceOf(Boss, shape_one.parent) then
-      shape_one.parent.health = shape_one.parent.health - 1
-      local dead = shape_one.parent.health <= 0
+    if instanceOf(Boss, object_one) then
+      object_one.health = object_one.health - 1
+      local dead = object_one.health <= 0
       if dead then
         game.collider:remove(shape_one, shape_two)
-        game.enemies[shape_one.parent.id] = nil
-        game.bullets[shape_two.parent.id] = nil
+        game.enemies[object_one.id] = nil
+        game.bullets[object_two.id] = nil
       else
         game.collider:remove(shape_two)
-        game.bullets[shape_two.parent.id] = nil
+        game.bullets[object_two.id] = nil
       end
     else
       game.collider:remove(shape_one, shape_two)
-      game.enemies[shape_one.parent.id] = nil
-      game.bullets[shape_two.parent.id] = nil
+      game.enemies[object_one.id] = nil
+      game.bullets[object_two.id] = nil
     end
     -- scoring calc
-    if instanceOf(Shooter, shape_one.parent) then
+    if instanceOf(Shooter, object_one) then
       game.player.score = game.player.score + 3
     else
       game.player.score = game.player.score + 1
@@ -278,26 +287,26 @@ function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
   end
   
 
-  if shape_two.bound then
-    if instanceOf(PlayerCharacter, shape_one.parent) then
-      shape_one.parent:move(mtv_x, mtv_y)
-    elseif instanceOf(Bullet, shape_one.parent) then
+  if object_two.bound then
+    if instanceOf(PlayerCharacter, object_one) then
+      object_one:move(mtv_x, mtv_y)
+    elseif instanceOf(Bullet, object_one) then
       game.collider:remove(shape_one)
-      game.bullets[shape_one.parent.id] = nil
+      game.bullets[object_one.id] = nil
     end
     return
-  elseif shape_one.bound then
-    if instanceOf(PlayerCharacter, shape_two.parent) then
-      shape_two.parent:move(mtv_x, mtv_y)
-    elseif instanceOf(Bullet, shape_two.parent) then
+  elseif object_one.bound then
+    if instanceOf(PlayerCharacter, object_two) then
+      object_two:move(mtv_x, mtv_y)
+    elseif instanceOf(Bullet, object_two) then
       game.collider:remove(shape_two)
-      game.bullets[shape_two.parent.id] = nil
+      game.bullets[object_two.id] = nil
     end
     return
   end
 
-  shape_one.parent:move(mtv_x/2, mtv_y/2)
-  shape_two.parent:move(-mtv_x/2, -mtv_y/2)
+  object_one:move(mtv_x/2, mtv_y/2)
+  object_two:move(-mtv_x/2, -mtv_y/2)
 
   --   local player, other, collision
   --   if shape_one.parent == game.player then
