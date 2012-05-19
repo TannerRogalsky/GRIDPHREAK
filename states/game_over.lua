@@ -1,7 +1,7 @@
 local GameOver = Game:addState('GameOver')
 
 function GameOver:enteredState()
-  for i,screen in ipairs(screenshots) do
+  for i,screen in ipairs(self.screenshots) do
     screen:encode("screen" .. i .. ".png")
   end
 

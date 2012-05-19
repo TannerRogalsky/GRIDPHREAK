@@ -21,7 +21,7 @@ function Main:enteredState()
   self.paused = false
   self.round_time = 0
 
-  screenshots = {}
+  self.screenshots = {}
 
   local boss_spawn_rate
   if self.settings.difficulty == "insane" then
@@ -38,7 +38,7 @@ function Main:enteredState()
   cron.every(self.settings.spawn_rate, self.spawn_baddy, self)
 
   if screenshots_enabled then
-    cron.every(1, self.take_screenshot)
+    cron.every(1, self.take_screenshot, self)
   end
 
   local raw = love.filesystem.read("shaders/overlay.c"):format(MAX_BALLS)
@@ -51,8 +51,8 @@ function Main:enteredState()
   self:update_overlay()
 end
 
-function Main.take_screenshot()
-  table.insert(screenshots, g.newScreenshot())
+function Main:take_screenshot()
+  table.insert(self.screenshots, g.newScreenshot())
 end
 
 function Main:render()
