@@ -337,21 +337,22 @@ function Main:exitedState()
   cron.reset()
 end
 
-function Main:create_bounds()
-  local bound = self.collider:addRectangle(-50, -20, g.getWidth() + 100, 50)
-  bound.bound = true
+function Main:create_bounds(padding)
+  padding = padding or 50
+  local bound = self.collider:addRectangle(-padding, -padding, g.getWidth() + padding * 2, 50)
+  bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.on_collide = boundary_collision
-  bound = self.collider:addRectangle(g.getWidth(), -50, 50, g.getHeight() + 100)
-  bound.bound = true
+  bound = self.collider:addRectangle(g.getWidth(), -padding, 50, g.getHeight() + padding * 2)
+  bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.on_collide = boundary_collision
-  bound = self.collider:addRectangle(-50, g.getHeight(), g.getWidth() + 100, 50)
-  bound.bound = true
+  bound = self.collider:addRectangle(-padding, g.getHeight(), g.getWidth() + padding * 2, 50)
+  bound.parent = {bound = true}
   self.collider:setPassive(bound)
   bound.on_collide = boundary_collision
-  bound = self.collider:addRectangle(-50, -50, 50, g.getHeight() + 100)
-  bound.bound = true
+  bound = self.collider:addRectangle(-padding, -padding, 50, g.getHeight() + padding * 2)
+  bound.parent = {bound = true}
   self.collider:setPassive(bound)
 end
 
