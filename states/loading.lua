@@ -3,7 +3,7 @@ local Loading = Game:addState('Loading')
 function Loading:enteredState()
   self.loader = require 'lib/love-loader'
   self.preloaded_image = {}
-  self.preloaded_json = {}
+  -- self.preloaded_json = {}
 
   for index, image in ipairs(love.filesystem.enumerate('images')) do
     if image:match('(.*).png$') ~= nil or image:match('(.*).gif$') ~= nil or image:match('(.*).jpg$') ~= nil then
@@ -23,12 +23,13 @@ end
 
 function Loading:render()
   local percent = 0
-  -- It's necessary to check for the loader because loader.update will trigger the state change
-  -- The state change will kill the loader but we'll still be in this function which expects the loader
   if self.loader.resourceCount ~= 0 then
     percent = self.loader.loadedCount / self.loader.resourceCount 
   end
-  g.print(("Loading .. %d%%"):format(percent*100),100,100)
+  g.setColor(255,255,255)
+  g.print(("Loading .. %d%%"):format(percent*100), 10, g.getHeight() / 3 * 2 - 25)
+  g.rectangle("line", 10, g.getHeight() / 3 * 2, g.getWidth() - 20, 25)
+  g.rectangle("fill", 10, g.getHeight() / 3 * 2, (g.getWidth() - 20) * percent, 25)
 end
 
 function Loading:update(dt)
