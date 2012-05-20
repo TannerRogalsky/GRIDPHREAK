@@ -9,7 +9,7 @@ function Boss:initialize(pos, radius)
   self.time_of_last_fire = 0
   self.health = 10
 
-  self.image = g.newImage('images/boss.png')
+  self.image = game.preloaded_image['boss.png']
 
   self.delta_to_player = {0,0}
 

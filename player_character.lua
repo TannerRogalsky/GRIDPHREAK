@@ -41,7 +41,7 @@ function PlayerCharacter:initialize(jsonInTableForm)
   self._physics_body.parent = self
   game.collider:addToGroup("player_and_bullets", self._physics_body)
 
-  self.image = g.newImage("images/player_v2.png")
+  self.image = game.preloaded_image["player_v2.png"]
 
   self.angle = 0
   self.firing = false

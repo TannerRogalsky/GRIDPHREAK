@@ -43,7 +43,7 @@ function Main:enteredState()
 
   local raw = love.filesystem.read("shaders/overlay.c"):format(MAX_BALLS)
   self.overlay = love.graphics.newPixelEffect(raw)
-  self.bg = love.graphics.newImage("images/bg2.png")
+  self.bg = self.preloaded_image["bg2.png"]
 
   raw = love.filesystem.read("shaders/topbar.c"):format(g.getHeight(), g.getWidth(), 30, 200)
   self.topbar = g.newPixelEffect(raw)

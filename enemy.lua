@@ -13,7 +13,7 @@ function Enemy:initialize(pos, radius)
   self.speed = 2
   self.color = {255,255,255,255}
 
-  self.image = g.newImage("images/enemy_grey.png")
+  self.image = game.preloaded_image["enemy_grey.png"]
 end
 
 function Enemy:update(dt)
