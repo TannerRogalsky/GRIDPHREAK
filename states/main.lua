@@ -30,7 +30,7 @@ function Main:enteredState()
     boss_spawn_rate = 60
   end
   cron.every(boss_spawn_rate, function()
-    local x,y = self:get_enemy_spawn_position()
+    local x,y = self.get_random_point_offscreen()
     local enemy = Boss:new({x = x, y = y}, 40)
     self.enemies[enemy.id] = enemy
   end)
@@ -198,7 +198,7 @@ function Main:update_overlay()
 end
 
 function Main:spawn_baddy()
-  local x,y = self.get_enemy_spawn_position()
+  local x,y = self.get_random_point_offscreen()
 
   local enemy_type
   if math.random(1,10) >= self.settings.crawler_ratio then
@@ -402,7 +402,7 @@ function Main:pack_game_objects()
   return positions, radii, deltas
 end
 
-function Main.get_enemy_spawn_position()
+function Main.get_random_point_offscreen()
   local x, y = math.random(0, g.getWidth()), math.random(0, g.getHeight())
   if math.random(0,1) == 0 then
     if x > g.getWidth() / 2 then
