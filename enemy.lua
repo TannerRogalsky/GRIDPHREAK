@@ -14,6 +14,7 @@ function Enemy:initialize(pos, radius)
   self.color = {255,255,255,255}
 
   self.image = game.preloaded_image["enemy_grey.png"]
+  self.image_dimensions = {width = self.image:getWidth(), height = self.image:getHeight()}
 end
 
 function Enemy:update(dt)
@@ -25,9 +26,10 @@ function Enemy:update(dt)
 end
 
 function Enemy:render()
-  -- love.graphics.circle("fill", self.pos.x, self.pos.y, self.radius)
   local x,y = self:bbox()
-  g.draw(self.image, x + 15, y + 15, self.angle, 1, 1, 50, 50)
+  g.draw(self.image, x + self.radius, y + self.radius, self.angle, 1, 1, self.image_dimensions.width / 2, self.image_dimensions.height / 2)
+
+  -- self._physics_body:draw("fill")
 
   -- love.graphics.setColor(0,0,0,255)
   -- x = self.pos.x + self.radius * math.cos(self.angle)
