@@ -22,6 +22,7 @@ cron = require 'lib/cron'
 -- Game classes
 require 'base'
 require 'game'
+require 'level'
 require 'character'
 require 'player_character'
 require 'bullet'
