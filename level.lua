@@ -16,7 +16,7 @@ end
 function Level:spawn(class, location, ...)
   assert(subclassOf(Enemy, class), "You must specify an enemy subclass to instantiate.")
   location = location or self.get_random_point_offscreen()
-  return class:new(location, ...))
+  return class:new(location, ...)
 end
 
 function Level.get_random_point_offscreen(padding)
