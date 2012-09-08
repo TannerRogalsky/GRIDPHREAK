@@ -142,43 +142,43 @@ function Main:update(dt)
   self:update_overlay()
 end
 
-function Main.keypressed(key, unicode)
+function Main:keypressed(key, unicode)
   if key == " " then key = "space" end
-  local action = game.player.control_map.keyboard.on_press[key]
+  local action = self.player.control_map.keyboard.on_press[key]
   if type(action) == "function" then action() end
 end
 
-function Main.joystickpressed(joystick, button)
-  local action = game.player.control_map.joystick.on_press[button]
+function Main:joystickpressed(joystick, button)
+  local action = self.player.control_map.joystick.on_press[button]
   if type(action) == "function" then action() end
 end
 
-function Main.joystickreleased(joystick, button)
-  local action = game.player.control_map.joystick.on_release[button]
+function Main:joystickreleased(joystick, button)
+  local action = self.player.control_map.joystick.on_release[button]
   if type(action) == "function" then action() end
 end
 
-function Main.mousepressed(x, y, button)
+function Main:mousepressed(x, y, button)
   if button == "l" then
-    if game.over then
-      game:gotoState("GameOver")
-    elseif game.paused then
-      game.paused = false
+    if self.over then
+      self:gotoState("GameOver")
+    elseif self.paused then
+      self.paused = false
     else
-      game.player.firing = true
+      self.player.firing = true
     end
   end
 end
 
-function Main.mousereleased(x, y, button)
+function Main:mousereleased(x, y, button)
   if button == "l" then
-    game.player.firing = false
+    self.player.firing = false
   end
 end
 
 function Main:focus(has_focus)
   if has_focus == false then
-    game.paused = true
+    self.paused = true
   end
 end
 

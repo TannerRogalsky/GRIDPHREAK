@@ -36,8 +36,8 @@ end
 function GameOver:exitedState()
 end
 
-function GameOver.mousepressed(x, y, button)
-  game:gotoState("Menu")
+function GameOver:mousepressed(x, y, button)
+  self:gotoState("Menu")
 end
 
 return GameOver

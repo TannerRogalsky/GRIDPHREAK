@@ -1,5 +1,4 @@
 BUGS
-- a bunch of the love event callbacks are using static game.methods which probably wrong
 
 FEATURES
 - show the torches or something?

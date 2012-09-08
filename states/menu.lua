@@ -94,11 +94,11 @@ function Menu:update(dt)
   self.bg:send('time', self.time)
 end
 
-function Menu.mousepressed(x, y, button)
-  for i,box in ipairs(game.ui) do
+function Menu:mousepressed(x, y, button)
+  for i,box in ipairs(self.ui) do
     if box:contains(x,y) then
       box.onclick()
-      game:gotoState("Main")
+      self:gotoState("Main")
     end
   end
 end
