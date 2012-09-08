@@ -6,6 +6,7 @@ function Shooter:initialize(pos, radius)
   self.speed = 1
   self.time_of_last_fire = 0
   self.color = {255,255,0}
+  self.score_worth = 3
 
   self.delta_to_player = {0,0}
 end
@@ -34,4 +35,17 @@ function Shooter:fire(current_time)
   local y = self.pos.y + self.radius * math.sin(self.angle)
   local bullet = Bullet:new({x = x, y = y}, self.angle)
   game.bullets[bullet.id] = bullet
+end
+
+function Shooter:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  local other_object = shape_two.parent
+
+  if instanceOf(Bullet, other_object) then
+    game.collider:remove(shape_one, shape_two)
+    game.enemies[self.id] = nil
+    game.bullets[other_object.id] = nil
+    game.player.score = game.player.score + self.score_worth
+  elseif instanceOf(Enemy, other_object) then
+    self:move(mtv_x / 2, mtv_y / 2)
+  end
 end

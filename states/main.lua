@@ -213,6 +213,8 @@ end
 
 function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
   -- print(tostring(shape_one.parent) .. " is colliding with " .. tostring(shape_two.parent))
+  if game.over then return end
+
   local object_one, object_two = shape_one.parent, shape_two.parent
 
   if type(object_one.on_collide) == "function" then
@@ -220,93 +222,8 @@ function Main.on_start_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
   end
 
   if type(object_two.on_collide) == "function" then
-    object_two:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+    object_two:on_collide(dt, shape_two, shape_one, -mtv_x, -mtv_y)
   end
-
-  if object_one.bound and instanceOf(Enemy, object_two) or object_two.bound and instanceOf(Enemy, object_one) or game.over then
-    return
-  end
-
-  if game.settings.god_mode_enabled ~= true then
-    if object_one == game.player and object_two.bound ~= true or object_two == game.player and object_one.bound ~= true then
-      game.over = true
-      return
-    end
-  end
-  
-  if instanceOf(Bullet, object_one) and instanceOf(Crawler, object_two) then
-    -- collision resolution
-    if instanceOf(Boss, object_two) then
-      object_two.health = object_two.health - 1
-      local dead = object_two.health <= 0
-      if dead then
-        game.collider:remove(shape_one, shape_two)
-        game.enemies[object_two.id] = nil
-        game.bullets[object_one.id] = nil
-      else
-        game.collider:remove(shape_one)
-        game.bullets[object_one.id] = nil
-      end
-    else
-      game.collider:remove(shape_one, shape_two)
-      game.enemies[object_two.id] = nil
-      game.bullets[object_one.id] = nil
-    end
-    -- scoring calc
-    if instanceOf(Shooter, object_two) then
-      game.player.score = game.player.score + 3
-    else
-      game.player.score = game.player.score + 1
-    end
-    return
-  elseif instanceOf(Bullet, object_two) and instanceOf(Enemy, object_one) then
-    -- collision resolution
-    if instanceOf(Boss, object_one) then
-      object_one.health = object_one.health - 1
-      local dead = object_one.health <= 0
-      if dead then
-        game.collider:remove(shape_one, shape_two)
-        game.enemies[object_one.id] = nil
-        game.bullets[object_two.id] = nil
-      else
-        game.collider:remove(shape_two)
-        game.bullets[object_two.id] = nil
-      end
-    else
-      game.collider:remove(shape_one, shape_two)
-      game.enemies[object_one.id] = nil
-      game.bullets[object_two.id] = nil
-    end
-    -- scoring calc
-    if instanceOf(Shooter, object_one) then
-      game.player.score = game.player.score + 3
-    else
-      game.player.score = game.player.score + 1
-    end
-    return
-  end
-  
-
-  if object_two.bound then
-    if instanceOf(PlayerCharacter, object_one) then
-      object_one:move(mtv_x, mtv_y)
-    elseif instanceOf(Bullet, object_one) then
-      game.collider:remove(shape_one)
-      game.bullets[object_one.id] = nil
-    end
-    return
-  elseif object_one.bound then
-    if instanceOf(PlayerCharacter, object_two) then
-      object_two:move(mtv_x, mtv_y)
-    elseif instanceOf(Bullet, object_two) then
-      game.collider:remove(shape_two)
-      game.bullets[object_two.id] = nil
-    end
-    return
-  end
-
-  object_one:move(mtv_x/2, mtv_y/2)
-  object_two:move(-mtv_x/2, -mtv_y/2)
 
   --   local player, other, collision
   --   if shape_one.parent == game.player then
@@ -348,21 +265,34 @@ end
 
 function Main:create_bounds(padding)
   padding = padding or 50
+  local boundary_collision = function(self, dt, shape_one, shape_two, mtv_x, mtv_y)
+    local other_object = shape_two.parent
+
+    if instanceOf(Bullet, other_object) then
+      game.collider:remove(shape_two)
+      game.bullets[other_object.id] = nil
+    end
+  end
+
   local bound = self.collider:addRectangle(-padding, -padding, g.getWidth() + padding * 2, 50)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
-  bound.on_collide = boundary_collision
+  bound.parent.on_collide = boundary_collision
+
   bound = self.collider:addRectangle(g.getWidth(), -padding, 50, g.getHeight() + padding * 2)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
-  bound.on_collide = boundary_collision
+  bound.parent.on_collide = boundary_collision
+
   bound = self.collider:addRectangle(-padding, g.getHeight(), g.getWidth() + padding * 2, 50)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
-  bound.on_collide = boundary_collision
+  bound.parent.on_collide = boundary_collision
+
   bound = self.collider:addRectangle(-padding, -padding, 50, g.getHeight() + padding * 2)
   bound.parent = {bound = true}
   self.collider:setPassive(bound)
+  bound.parent.on_collide = boundary_collision
 end
 
 

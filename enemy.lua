@@ -36,3 +36,15 @@ function Enemy:render()
   -- y = self.pos.y + self.radius * math.sin(self.angle)
   -- love.graphics.line(self.pos.x, self.pos.y, x, y)
 end
+
+function Enemy:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  local other_object = shape_two.parent
+
+  if instanceOf(Bullet, other_object) then
+    game.collider:remove(shape_one, shape_two)
+    game.enemies[self.id] = nil
+    game.bullets[other_object.id] = nil
+  elseif instanceOf(Enemy, other_object) then
+    self:move(mtv_x / 2, mtv_y / 2)
+  end
+end

@@ -8,6 +8,7 @@ function Boss:initialize(pos, radius)
   self.speed = 0.5
   self.time_of_last_fire = 0
   self.health = 10
+  self.score_worth = 10
 
   self.image = game.preloaded_image['boss.png']
 
@@ -65,4 +66,24 @@ function Boss:render()
   g.setColor(255,255,255,255)
   local x,y = self:bbox()
   g.draw(self.image, x + 40, y + 40, self.angle, 1,1, 160, 160)
+end
+
+function Boss:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  local other_object = shape_two.parent
+
+  if instanceOf(Bullet, other_object) then
+    self.health = self.health - 1
+    local dead = self.health <= 0
+    if dead then
+      game.collider:remove(shape_one, shape_two)
+      game.enemies[self.id] = nil
+      game.bullets[other_object.id] = nil
+      game.player.score = game.player.score + self.score_worth
+    else
+      game.collider:remove(shape_two)
+      game.bullets[other_object.id] = nil
+    end
+  elseif instanceOf(Enemy, other_object) then
+    self:move(mtv_x / 2, mtv_y / 2)
+  end
 end

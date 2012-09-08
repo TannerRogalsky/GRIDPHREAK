@@ -1,5 +1,4 @@
 BUGS
-- collision function is horrible and probably barely working. Use on_collide function on objects?
 - a bunch of the love event callbacks are using static game.methods which probably wrong
 
 FEATURES

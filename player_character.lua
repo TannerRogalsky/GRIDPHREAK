@@ -111,3 +111,13 @@ function PlayerCharacter:drop_torch()
     game.torches[torch.id] = torch
   end
 end
+
+function PlayerCharacter:on_collide(dt, shape_one, shape_two, mtv_x, mtv_y)
+  local other_object = shape_two.parent
+
+  if other_object.bound then
+    self:move(mtv_x, mtv_y)
+  elseif game.settings.god_mode_enabled ~= true and instanceOf(Enemy, other_object) then
+    game.over = true
+  end
+end
